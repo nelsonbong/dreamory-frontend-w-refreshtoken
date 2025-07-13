@@ -23,12 +23,6 @@ type Event = {
   thumbnail: string;
 };
 
-const PageHeader = () => (
-  <Typography variant="h3" gutterBottom textAlign="center" mt={8}>
-    Dreamory Events
-  </Typography>
-);
-
 const UserEventList = () => {
   const navigate = useNavigate();
   const [events, setEvents] = useState<Event[]>([]);
@@ -36,84 +30,76 @@ const UserEventList = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-const fetchEvents = async (currentPage: number) => {
-  setLoading(true);
-  try {
-    const res = await api.get(`/public-events?page=${currentPage}&limit=3`);
-
-    // 🔍 Log CORS headers and response
-    console.log('✅ Response Headers:', res.headers);
-    console.log('✅ Event Data:', res.data);
-
-    setEvents(res.data.events);
-    setTotalPages(res.data.totalPages);
-  } catch (error) {
-    console.error('❌ Failed to fetch events:', error);
-
-    // If it's a CORS issue, error.message often says so
-    if (error instanceof Error) {
-      console.log('❌ Error message:', error.message);
+  const fetchEvents = async (currentPage: number) => {
+    setLoading(true);
+    try {
+      const res = await api.get(`/public-events?page=${currentPage}&limit=3`);
+      setEvents(res.data.events);
+      setTotalPages(res.data.totalPages);
+    } catch (error) {
+      console.error('❌ Failed to fetch events:', error);
+    } finally {
+      setLoading(false);
     }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   useEffect(() => {
     fetchEvents(page);
   }, [page]);
 
-  if (loading) {
-    return (
-      <Box mt={4} display="flex" justifyContent="center">
-        <CircularProgress />
-      </Box>
-    );
-  }
-
   return (
     <Container>
-      <PageHeader />
+      <Typography variant="h3" gutterBottom textAlign="center" mt={8}>
+        Dreamory Events
+      </Typography>
 
-      <Box display="flex" flexWrap="wrap" justifyContent="center" gap={4} mt={8}>
-        {events.map((event) => (
-          <Card
-            key={event.id}
-            sx={{
-              width: '300px',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            <CardActionArea onClick={() => navigate(`/public-events/${event.id}`)}>
-              <CardMedia
-                component="img"
-                height="200"
-                image={event.thumbnail}
-                alt={event.name}
-                sx={{ objectFit: 'cover' }}
-              />
-              <CardContent>
-                <Typography variant="h6" noWrap>
-                  {event.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" noWrap>
-                  Click for More Details...
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        ))}
-      </Box>
+      {loading ? (
+        <Box mt={4} display="flex" justifyContent="center">
+          <CircularProgress />
+        </Box>
+      ) : (
+        <>
+          <Box display="flex" flexWrap="wrap" justifyContent="center" gap={4} mt={8}>
+            {events.map((event) => (
+              <Card
+                key={event.id}
+                sx={{
+                  width: '300px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <CardActionArea onClick={() => navigate(`/public-events/${event.id}`)}>
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={event.thumbnail}
+                    alt={event.name}
+                    sx={{ objectFit: 'cover' }}
+                  />
+                  <CardContent>
+                    <Typography variant="h6" noWrap>
+                      {event.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" noWrap>
+                      Click for More Details...
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            ))}
+          </Box>
 
-      <Box display="flex" justifyContent="center" mt={8}>
-        <Pagination
-          count={totalPages}
-          page={page}
-          onChange={(_, value) => setPage(value)}
-          color="primary"
-        />
-      </Box>
+          <Box display="flex" justifyContent="center" mt={8}>
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={(_, value) => setPage(value)}
+              color="primary"
+            />
+          </Box>
+        </>
+      )}
     </Container>
   );
 };
