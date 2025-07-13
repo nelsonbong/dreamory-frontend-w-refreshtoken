@@ -23,6 +23,12 @@ type Event = {
   thumbnail: string;
 };
 
+const PageHeader = () => (
+  <Typography variant="h3" gutterBottom textAlign="center" mt={8}>
+    Dreamory Events
+  </Typography>
+);
+
 const UserEventList = () => {
   const navigate = useNavigate();
   const [events, setEvents] = useState<Event[]>([]);
@@ -67,9 +73,7 @@ const fetchEvents = async (currentPage: number) => {
 
   return (
     <Container>
-      <Typography variant="h3" gutterBottom textAlign="center" mt={8}>
-        Dreamory Events
-      </Typography>
+      <PageHeader />
 
       <Box display="flex" flexWrap="wrap" justifyContent="center" gap={4} mt={8}>
         {events.map((event) => (
