@@ -30,18 +30,28 @@ const UserEventList = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const fetchEvents = async (currentPage: number) => {
-    setLoading(true);
-    try {
-      const res = await api.get(`/public-events?page=${currentPage}&limit=3`);
-      setEvents(res.data.events);
-      setTotalPages(res.data.totalPages);
-    } catch (error) {
-      console.error('Failed to fetch events:', error);
-    } finally {
-      setLoading(false);
+const fetchEvents = async (currentPage: number) => {
+  setLoading(true);
+  try {
+    const res = await api.get(`/public-events?page=${currentPage}&limit=3`);
+
+    // 🔍 Log CORS headers and response
+    console.log('✅ Response Headers:', res.headers);
+    console.log('✅ Event Data:', res.data);
+
+    setEvents(res.data.events);
+    setTotalPages(res.data.totalPages);
+  } catch (error) {
+    console.error('❌ Failed to fetch events:', error);
+
+    // If it's a CORS issue, error.message often says so
+    if (error instanceof Error) {
+      console.log('❌ Error message:', error.message);
     }
-  };
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchEvents(page);
