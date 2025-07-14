@@ -26,19 +26,22 @@ const RegisterPage = () => {
     formState: { errors },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
-  });
+});
 
-  const onSubmit = async (data: RegisterFormData) => {
-    try {
-      const res = await api.post('/auth/register', data);
-      const result = res.data;
+const onSubmit = async (data: RegisterFormData) => {
+  try {
+    const res = await api.post('/auth/register', data, { withCredentials: true });
+    const result = res.data;
 
-      localStorage.setItem('token', result.token);
-      navigate('/admin/dashboard/list-events');
-    } catch (error) {
-      alert('Registration failed');
-    }
-  };
+    // ✅ Store accessToken only
+    localStorage.setItem('accessToken', result.accessToken);
+
+    // ✅ Redirect
+    navigate('/admin/dashboard/list-events');
+  } catch (error) {
+    alert('Registration failed');
+  }
+};
 
   return (
     <Box

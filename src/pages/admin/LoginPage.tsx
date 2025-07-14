@@ -17,7 +17,6 @@ const loginSchema = z.object({
   password: z.string().min(6),
 });
 
-// Infer TypeScript type from schema
 type LoginFormData = z.infer<typeof loginSchema>;
 
 const LoginPage = () => {
@@ -32,10 +31,16 @@ const LoginPage = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      const res = await api.post('/auth/login', data);
+      const res = await api.post('/auth/login', data, {
+        withCredentials: true, // ✅ Important: Enables sending/receiving cookies
+      });
+
       const result = res.data;
 
-      localStorage.setItem('token', result.token);
+      // ✅ Save access token only (refresh token is stored in httpOnly cookie automatically)
+      localStorage.setItem('accessToken', result.accessToken);
+
+      // ✅ Redirect after login
       navigate('/admin/dashboard/list-events');
     } catch (err) {
       alert('Invalid email or password');
@@ -57,11 +62,7 @@ const LoginPage = () => {
           variant="h4"
           gutterBottom
           sx={{
-            fontSize: {
-              xs: '1.5rem',
-              sm: '2rem',
-              md: '2.5rem',
-            },
+            fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
             textAlign: 'center',
             mb: 3,
           }}
@@ -81,12 +82,6 @@ const LoginPage = () => {
             {...register('email')}
             error={!!errors.email}
             helperText={errors.email?.message}
-            sx={{
-              fontSize: {
-                xs: '0.9rem',
-                sm: '1rem',
-              },
-            }}
           />
           <TextField
             fullWidth
@@ -95,28 +90,13 @@ const LoginPage = () => {
             {...register('password')}
             error={!!errors.password}
             helperText={errors.password?.message}
-            sx={{
-              fontSize: {
-                xs: '0.9rem',
-                sm: '1rem',
-              },
-            }}
           />
           <Button
             type="submit"
             variant="contained"
             color="primary"
             fullWidth
-            sx={{
-              py: {
-                xs: 1,
-                sm: 1.5,
-              },
-              fontSize: {
-                xs: '0.9rem',
-                sm: '1rem',
-              },
-            }}
+            sx={{ py: { xs: 1, sm: 1.5 } }}
           >
             Login
           </Button>

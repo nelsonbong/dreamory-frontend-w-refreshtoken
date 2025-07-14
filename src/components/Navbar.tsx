@@ -1,12 +1,28 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
+import { useEffect, useState } from 'react';
 
 const Navbar = () => {
-  const token = localStorage.getItem('token');
   const navigate = useNavigate();
+  const location = useLocation(); // ✅ track route changes
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    setAccessToken(token);
+  }, [location]); // ✅ update whenever the route changes (like after login/register)
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    // Clear token
+    localStorage.removeItem('accessToken');
+
+    // Call logout endpoint to clear refresh cookie
+    fetch(`${import.meta.env.VITE_API_URL}/session/logout`, {
+      method: 'POST',
+      credentials: 'include',
+    });
+
+    setAccessToken(null);
     navigate('/admin/login');
   };
 
@@ -28,11 +44,7 @@ const Navbar = () => {
         disableGutters
         sx={{
           height: '100%',
-          px: {
-            xs: 1,
-            sm: 2,
-            md: 4,
-          },
+          px: { xs: 1, sm: 2, md: 4 },
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -45,11 +57,7 @@ const Navbar = () => {
           color="inherit"
           sx={{
             textDecoration: 'none',
-            fontSize: {
-              xs: '18px',
-              sm: '20px',
-              md: '24px',
-            },
+            fontSize: { xs: '18px', sm: '20px', md: '24px' },
           }}
         >
           Dreamory's Event Gallery
@@ -58,30 +66,16 @@ const Navbar = () => {
         <Box
           sx={{
             display: 'flex',
-            gap: {
-              xs: 1,
-              sm: 2,
-            },
+            gap: { xs: 1, sm: 2 },
           }}
         >
-          {!token ? (
+          {!accessToken ? (
             <>
               <Button
                 color="inherit"
                 component={Link}
                 to="/admin/register"
-                sx={{
-                  fontSize: {
-                    xs: '14px',
-                    sm: '16px',
-                    md: '18px',
-                  },
-                  minWidth: 0,
-                  px: {
-                    xs: 1,
-                    sm: 2,
-                  },
-                }}
+                sx={{ fontSize: { xs: '14px', sm: '16px', md: '18px' }, px: { xs: 1, sm: 2 } }}
               >
                 Register
               </Button>
@@ -89,18 +83,7 @@ const Navbar = () => {
                 color="inherit"
                 component={Link}
                 to="/admin/login"
-                sx={{
-                  fontSize: {
-                    xs: '14px',
-                    sm: '16px',
-                    md: '18px',
-                  },
-                  minWidth: 0,
-                  px: {
-                    xs: 1,
-                    sm: 2,
-                  },
-                }}
+                sx={{ fontSize: { xs: '14px', sm: '16px', md: '18px' }, px: { xs: 1, sm: 2 } }}
               >
                 Login
               </Button>
@@ -109,18 +92,7 @@ const Navbar = () => {
             <Button
               color="inherit"
               onClick={handleLogout}
-              sx={{
-                fontSize: {
-                  xs: '14px',
-                  sm: '16px',
-                  md: '18px',
-                },
-                minWidth: 0,
-                px: {
-                  xs: 1,
-                  sm: 2,
-                },
-              }}
+              sx={{ fontSize: { xs: '14px', sm: '16px', md: '18px' }, px: { xs: 1, sm: 2 } }}
             >
               Logout
             </Button>
