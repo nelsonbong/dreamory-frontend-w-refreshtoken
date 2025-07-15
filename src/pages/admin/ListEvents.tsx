@@ -112,12 +112,20 @@ const ListEvents = () => {
 
   if (loading) {
     return (
-      <Container sx={{ mt: 4 }}>
-        <Typography variant="h5">Loading Events...</Typography>
-        <CircularProgress sx={{ mt: 2 }} />
-      </Container>
-    );
-  }
+      <Container 
+        maxWidth="sm"
+          sx={{
+            height: '80vh',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Typography variant="h5">Loading Events...</Typography>
+          <CircularProgress sx={{ mt: 2 }} />
+        </Container>
+      );
+    }
 
   return (
     <Container sx={{ mt: 4 }}>

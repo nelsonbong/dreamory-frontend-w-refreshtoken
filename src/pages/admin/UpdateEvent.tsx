@@ -1,17 +1,18 @@
 import {
-  Container, Typography, TextField, Button,
-  Box, CircularProgress,
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Box,
+  CircularProgress,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import api from '../../api'; // Axios instance
+import api from '../../api';
+import type { EventFormData as BaseEventFormData } from '../../types/event';
 
-type EventFormData = {
-  name: string;
-  location: string;
-  startDate: string;
-  endDate: string;
+type UpdateEventFormData = Omit<BaseEventFormData, 'thumbnail'> & {
   thumbnail?: FileList;
 };
 
@@ -25,7 +26,7 @@ const UpdateEvent = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<EventFormData>();
+  } = useForm<UpdateEventFormData>();
 
   // 🔄 Fetch event by ID from backend
   useEffect(() => {
@@ -57,7 +58,7 @@ const UpdateEvent = () => {
   }, [id, reset]);
 
   // 🔁 Handle form submission
-  const onSubmit = async (data: EventFormData) => {
+  const onSubmit = async (data: UpdateEventFormData) => {
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('location', data.location);
@@ -84,10 +85,24 @@ const UpdateEvent = () => {
     }
   };
 
-  if (loading) return <Container><CircularProgress /></Container>;
+  if (loading) {
+    return (
+      <Container
+        maxWidth="sm"
+        sx={{
+          height: '80vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <CircularProgress />
+      </Container>
+    );
+  }
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" sx={{ mt: 8 }}>
       <Typography variant="h4" gutterBottom>
         Update Event
       </Typography>

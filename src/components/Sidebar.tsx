@@ -7,13 +7,9 @@ import {
   Typography,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
+import type { SidebarItem } from '../types/event'
 
 const Sidebar = () => {
-
-  type SidebarItem = {
-    label: string;
-    path: string;
-  };
 
   const sidebarItems: SidebarItem[] = [
     { label: 'List Events', path: '/admin/dashboard/list-events' },

@@ -7,8 +7,8 @@ import {
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api'; // Adjust path if needed
-import type { EventFormData } from '../../types/event'
+import api from '../../api';
+import type { EventFormData } from '../../types/event';
 
 const CreateEvent = () => {
   const {
@@ -26,8 +26,7 @@ const CreateEvent = () => {
     formData.append('location', data.location);
     formData.append('startDate', data.startDate);
     formData.append('endDate', data.endDate);
-    formData.append('thumbnail', data.thumbnail[0]); // Only one file expected
-    formData.append('status', 'Ongoing'); // default status
+    formData.append('thumbnail', data.thumbnail[0]);
 
     const token = localStorage.getItem('accessToken');
 
@@ -47,7 +46,7 @@ const CreateEvent = () => {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" sx={{ mt: 8 }}>
       <Typography variant="h4" gutterBottom>
         Create Event
       </Typography>

@@ -24,3 +24,8 @@ export type ListEvent = {
   startDate: string;
   endDate: string;
 };
+
+export type SidebarItem = {
+  label: string;
+  path: string;
+};
