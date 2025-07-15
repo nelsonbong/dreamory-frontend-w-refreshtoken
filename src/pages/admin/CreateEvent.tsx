@@ -8,14 +8,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api'; // Adjust path if needed
-
-type EventFormData = {
-  name: string;
-  location: string;
-  startDate: string;
-  endDate: string;
-  thumbnail: FileList;
-};
+import type { EventFormData } from '../../types/event'
 
 const CreateEvent = () => {
   const {
@@ -36,7 +29,7 @@ const CreateEvent = () => {
     formData.append('thumbnail', data.thumbnail[0]); // Only one file expected
     formData.append('status', 'Ongoing'); // default status
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
 
     try {
       await api.post('/events', formData, {

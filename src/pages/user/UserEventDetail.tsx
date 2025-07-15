@@ -11,21 +11,12 @@ import {
   CircularProgress,
 } from '@mui/material';
 import api from '../../api';
-
-type Event = {
-  id: string;
-  name: string;
-  location: string;
-  status: string;
-  startDate: string;
-  endDate: string;
-  thumbnail: string;
-};
+import type { EventId } from '../../types/event';
 
 const UserEventDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [event, setEvent] = useState<Event | null>(null);
+  const [event, setEvent] = useState<EventId | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

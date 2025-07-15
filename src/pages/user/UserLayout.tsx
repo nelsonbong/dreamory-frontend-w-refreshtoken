@@ -27,7 +27,7 @@ const UserLayout = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => navigate('/admin/dashboard')}
+          onClick={() => navigate('/admin/dashboard/list-events')}
         >
           Admin Portal
         </Button>

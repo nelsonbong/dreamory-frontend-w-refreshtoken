@@ -9,19 +9,11 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowDownward, ArrowUpward, Visibility, VisibilityOff } from '@mui/icons-material';
 import api from '../../api';
-
-type Event = {
-  id: string;
-  name: string;
-  location: string;
-  status: string;
-  startDate: string;
-  endDate: string;
-};
+import type { ListEvent } from '../../types/event';
 
 const ListEvents = () => {
   const navigate = useNavigate();
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<ListEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
@@ -34,7 +26,7 @@ const ListEvents = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('accessToken');
       try {
         const res = await api.get('/events', {
           headers: { Authorization: `Bearer ${token}` },
@@ -59,7 +51,7 @@ const ListEvents = () => {
   const confirmDelete = async () => {
     if (!deletingId || !password) return;
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     try {
       await api.post(
         `/events/${deletingId}/delete-with-password`,
@@ -82,7 +74,7 @@ const ListEvents = () => {
   };
 
   const handleStatusChange = async (eventId: string, newStatus: string) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     try {
       await api.patch(`/events/${eventId}/status`, { status: newStatus }, {
         headers: { Authorization: `Bearer ${token}` },

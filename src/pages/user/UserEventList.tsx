@@ -12,16 +12,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import api from '../../api';
-
-type Event = {
-  id: string;
-  name: string;
-  location: string;
-  status: string;
-  startDate: string;
-  endDate: string;
-  thumbnail: string;
-};
+import type { Event }from '../../types/event';
 
 const UserEventList = () => {
   const navigate = useNavigate();

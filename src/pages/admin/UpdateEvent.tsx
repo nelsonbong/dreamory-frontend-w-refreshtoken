@@ -31,7 +31,7 @@ const UpdateEvent = () => {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('accessToken');
         const res = await api.get(`/events/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,

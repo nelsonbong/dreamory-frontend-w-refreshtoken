@@ -3,7 +3,7 @@ import Sidebar from '../../components/Sidebar';
 import { Outlet } from 'react-router-dom';
 
 const DashboardLayout = () => {
-  const isAuthenticated = localStorage.getItem('token');
+  const isAuthenticated = localStorage.getItem('accessToken');
 
   if (!isAuthenticated) {
     return (

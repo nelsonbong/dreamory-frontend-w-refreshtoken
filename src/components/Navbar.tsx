@@ -1,27 +1,26 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { useEffect, useState } from 'react';
+import api from '../api';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // ✅ track route changes
+  const location = useLocation();
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     setAccessToken(token);
-  }, [location]); // ✅ update whenever the route changes (like after login/register)
+  }, [location]);
 
-  const handleLogout = () => {
-    // Clear token
+  const handleLogout = async () => {
+    try {
+      await api.post('/session/logout'); // Clears the refresh token cookie
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+
     localStorage.removeItem('accessToken');
-
-    // Call logout endpoint to clear refresh cookie
-    fetch(`${import.meta.env.VITE_API_URL}/session/logout`, {
-      method: 'POST',
-      credentials: 'include',
-    });
-
     setAccessToken(null);
     navigate('/admin/login');
   };
@@ -63,19 +62,17 @@ const Navbar = () => {
           Dreamory's Event Gallery
         </Typography>
 
-        <Box
-          sx={{
-            display: 'flex',
-            gap: { xs: 1, sm: 2 },
-          }}
-        >
+        <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 } }}>
           {!accessToken ? (
             <>
               <Button
                 color="inherit"
                 component={Link}
                 to="/admin/register"
-                sx={{ fontSize: { xs: '14px', sm: '16px', md: '18px' }, px: { xs: 1, sm: 2 } }}
+                sx={{
+                  fontSize: { xs: '14px', sm: '16px', md: '18px' },
+                  px: { xs: 1, sm: 2 },
+                }}
               >
                 Register
               </Button>
@@ -83,7 +80,10 @@ const Navbar = () => {
                 color="inherit"
                 component={Link}
                 to="/admin/login"
-                sx={{ fontSize: { xs: '14px', sm: '16px', md: '18px' }, px: { xs: 1, sm: 2 } }}
+                sx={{
+                  fontSize: { xs: '14px', sm: '16px', md: '18px' },
+                  px: { xs: 1, sm: 2 },
+                }}
               >
                 Login
               </Button>
@@ -92,7 +92,10 @@ const Navbar = () => {
             <Button
               color="inherit"
               onClick={handleLogout}
-              sx={{ fontSize: { xs: '14px', sm: '16px', md: '18px' }, px: { xs: 1, sm: 2 } }}
+              sx={{
+                fontSize: { xs: '14px', sm: '16px', md: '18px' },
+                px: { xs: 1, sm: 2 },
+              }}
             >
               Logout
             </Button>
